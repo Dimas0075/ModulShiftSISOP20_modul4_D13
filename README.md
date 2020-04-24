@@ -1,4 +1,4 @@
-# ModulShiftSISOP20_modul4_D13
+# SoalShiftSISOP20_modul4_D13
 # Anggota Kelompok
 * Herri Purba                     05111840000056
 * Nugroho Dimas Ardiyanto         05111840000075
