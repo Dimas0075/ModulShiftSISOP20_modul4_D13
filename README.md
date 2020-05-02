@@ -75,3 +75,58 @@ INFO::200419-18:29:33::CREAT::/iz1/yena.jpg                  |
 INFO::200419-18:29:33::RENAME::/iz1/yena.jpg::/iz1/yena.jpeg |
 -------------------------------------------------------------|
 
+##### Jawaban No 4
+```c
+ void Warning(char * str){
+	FILE * logFile = fopen("/home/dimas/fs.log", "a");
+	time_t rawtime;
+	struct tm * timeinfo;
+	time ( &rawtime );
+	timeinfo = localtime (&rawtime);
+	fprintf(logFile, "WARNING::%d%d%d-%d:%d:%d::%s\n", timeinfo->tm_year+1900, timeinfo->tm_mon, timeinfo->tm_mday, timeinfo->tm_hour,  timeinfo->tm_min, timeinfo->tm_sec, str);
+	fclose(logFile);
+}
+
+void Info(char * str){
+	FILE * logFile = fopen("/home/dimas/fs.log", "a");
+	time_t rawtime;
+	struct tm * timeinfo;
+	time ( &rawtime );
+	timeinfo = localtime (&rawtime);
+	fprintf(logFile, "INFO::%d%d%d-%d:%d:%d::%s\n", timeinfo->tm_year+1900, timeinfo->tm_mon, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec, str);
+	fclose(logFile);
+}
+```
+Sesuai dengan perintah pada soal yaitu leveling saat melakukan syscall. Maka akan terdapat dua level yaitu Warning dan Info </br>
+Untuk contohnya pada mkdir, pada fungsi tersebut akan memanggil Info(str) yang akan mengappend ke fs.log
+```c
+static int xmp_mkdir(const char *path, mode_t mode)
+{
+	int res;
+    char fpath[1000];
+
+	if(strcmp(path, "/") == 0){
+		path = dirpath;
+		sprintf(fpath, "%s", path);
+	}else{
+		sprintf(fpath, "%s%s", dirpath, path);
+	}
+
+	res = mkdir(fpath, mode);
+	char str[100];
+	sprintf(str, "MKDIR::%s", path);
+	Info(str);
+	if (res == -1)
+		return -errno;
+
+	return 0;
+}
+``` 
+```c
+fprintf(logFile, "WARNING::%d%d%d-%d:%d:%d::%s\n", timeinfo->tm_year+1900, timeinfo->tm_mon, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec, str);
+```
+Lalu untuk format logging menggunakan localtime.</br>
+Untuk syscall yang dipanggil dan deskripsi path atau filenya terdapat pada str.
+
+
+
